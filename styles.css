@@ -1,5 +1,5 @@
 /* =====================================================================================
-   Small Games — the studio catalogue.
+   Quad Squirrel — the studio catalogue.
    =====================================================================================
    The page is built from the same parts the games are: warm paper, white tiles with a
    hairline edge, one soft shadow, and a rounded-square tile as the unit of everything.
@@ -117,26 +117,13 @@ a {
   text-decoration: none;
 }
 
-/* The wordmark's own glyph: four tiles, the way every board in these games starts. */
-.mark-tiles {
-  display: grid;
-  grid-template-columns: 11px 11px;
-  grid-template-rows: 11px 11px;
-  gap: 3px;
+/* The mark: four quadrants of the Main Quad, and a 2x2 board with one piece to a
+   region. One file (assets/logo.svg) serves the masthead and the favicon. */
+.mark-ico {
   flex: none;
-}
-.mark-tiles i {
-  border-radius: 4px;
-  background: var(--nyandoku);
-}
-.mark-tiles i:nth-child(2) {
-  background: var(--savedoge);
-}
-.mark-tiles i:nth-child(3) {
-  background: var(--parabox);
-}
-.mark-tiles i:nth-child(4) {
-  background: var(--isleofglass);
+  display: block;
+  width: 34px;
+  height: 34px;
 }
 
 .top nav {
@@ -546,4 +533,84 @@ footer nav {
   color: var(--ink);
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
+}
+
+/* --- the curtain ------------------------------------------------------------------------- */
+/* Four tiles arrive spinning, land as the mark, then swing apart and let the page
+   through. It runs while the hero's game is still loading, so the wait is the
+   animation rather than a spinner. Plays once a session; ?intro replays it;
+   anyone who asked their system for less motion never gets it (see index.html). */
+
+html.curtain-up,
+html.curtain-up body {
+  overflow: hidden;
+}
+
+#curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  background-image: linear-gradient(180deg, var(--paper-top), var(--paper) 60%, var(--paper-deep));
+  animation: qs-veil 0.55s ease 1.5s forwards;
+
+  --qt: 78px;  /* tile */
+  --qs: 94px;  /* tile + gap: how far a tile sits from its neighbour */
+}
+
+.curtain-mark {
+  position: relative;
+  width: calc(var(--qs) + var(--qt));
+  height: calc(var(--qs) + var(--qt));
+  animation: qs-spin 1.05s cubic-bezier(0.16, 0.84, 0.34, 1) forwards;
+}
+
+.qt {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--qt);
+  height: var(--qt);
+  border-radius: 23%;
+  display: grid;
+  place-items: center;
+  color: #f7efe9;
+  animation:
+    qs-deal 0.9s cubic-bezier(0.18, 0.86, 0.3, 1) 0.05s backwards,
+    qs-open 0.62s cubic-bezier(0.55, 0, 0.85, 0.35) 1.3s forwards;
+}
+.qt svg {
+  width: 54%;
+  height: 54%;
+}
+
+/* Same four cells, same four colours, same order as assets/logo.svg. */
+.qt1 { background: #6e7d3f; --x: 0px;        --y: 0px;        --ox: -46vmax; --oy: -46vmax; --or: -22deg; }
+.qt2 { background: #be4e18; --x: var(--qs);  --y: 0px;        --ox:  46vmax; --oy: -46vmax; --or:  22deg; }
+.qt3 { background: #284a6b; --x: 0px;        --y: var(--qs);  --ox: -46vmax; --oy:  46vmax; --or:  22deg; }
+.qt4 { background: #d9922b; --x: var(--qs);  --y: var(--qs);  --ox:  46vmax; --oy:  46vmax; --or: -22deg; }
+
+@keyframes qs-spin {
+  from { transform: rotate(-210deg) scale(0.72); }
+  to   { transform: rotate(0deg) scale(1); }
+}
+
+@keyframes qs-deal {
+  0%   { transform: translate(calc(var(--qs) / 2), calc(var(--qs) / 2)) scale(0.14); opacity: 0; }
+  30%  { opacity: 1; }
+  100% { transform: translate(var(--x), var(--y)) scale(1); opacity: 1; }
+}
+
+@keyframes qs-open {
+  to { transform: translate(var(--ox), var(--oy)) scale(0.5) rotate(var(--or)); opacity: 0; }
+}
+
+@keyframes qs-veil {
+  to { opacity: 0; visibility: hidden; }
+}
+
+@media (max-width: 520px) {
+  #curtain { --qt: 58px; --qs: 70px; }
 }

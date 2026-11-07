@@ -3,14 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Small Games — six games you can finish</title>
-<meta name="description" content="Six small games: five that open instantly inside TikTok with nothing to download, and one 3D rescue adventure on the App Store. Play any of them right here in the browser." />
+<title>Quad Squirrel — Clever little games, ready to play</title>
+<meta name="description" content="A handful of thoughtful, bite-sized games. Play instant puzzles right in your browser, or jump into Bunny Escape on the App Store." />
 <meta name="theme-color" content="#f7efe9" />
-<meta property="og:title" content="Small Games — six games you can finish" />
-<meta property="og:description" content="Five TikTok mini games you can play with one tap, and Bunny Escape on the App Store." />
+<meta property="og:title" content="Quad Squirrel — Clever little games, ready to play" />
+<meta property="og:description" content="A handful of thoughtful, bite-sized games. Try instant puzzles in your browser, plus Bunny Escape on iOS." />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="assets/key_nyandoku.webp" />
-<link rel="icon" href="assets/key_nyandoku.webp" type="image/webp" />
+<meta property="og:image" content="assets/logo-512.png" />
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+<link rel="icon" href="assets/logo-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="assets/logo-180.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Noto+Sans+SC:wght@500&display=swap" rel="stylesheet" />
@@ -19,11 +21,47 @@
 <body>
 <a class="skip" href="#games">Skip to the games</a>
 
+<!-- The four glyphs, defined once. The masthead uses assets/logo.svg (one file, so
+     it can also be the favicon); the curtain below reuses these one tile at a time. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="gLeaf" fill="currentColor">
+    <path d="M21.4 2.6C21.4 12.6 15.2 19.4 5.4 20.3Z"/>
+    <path d="M20.2 3.8C10.4 4.7 4.2 11.5 4.2 21.5Z"/>
+    <path d="M5.2 20.5 2.2 23.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+  </g>
+  <g id="gAcorn" fill="currentColor">
+    <rect x="10.7" y="0.6" width="2.6" height="3.8" rx="1.3"/>
+    <path d="M2.6 7.2C2.6 3.6 6.8 1.6 12 1.6s9.4 2 9.4 5.6Z"/>
+    <path d="M3.4 8.9h17.2c0 6.5-3.6 13.2-8.6 14.9C7 22.1 3.4 15.4 3.4 8.9Z"/>
+  </g>
+  <g id="gPaw" fill="currentColor">
+    <circle cx="6.3" cy="10.4" r="2.35"/><circle cx="10.4" cy="7.2" r="2.35"/>
+    <circle cx="14.6" cy="7.2" r="2.35"/><circle cx="18.7" cy="10.4" r="2.35"/>
+    <path d="M12.5 22.6c-4.8 0-6.8-3.6-5.2-6.4 1.6-2.9 8.8-2.9 10.4 0 1.6 2.8-.4 6.4-5.2 6.4Z"/>
+  </g>
+  <g id="gTail" fill="none" stroke="currentColor" stroke-linecap="round">
+    <path d="M6.4 21.8C14 21.8 19.4 17.6 20.4 12" stroke-width="5.4"/>
+    <path d="M20.4 12C21.4 6.6 17.2 2.8 12.6 3.8 9.2 4.5 7.6 8 9.8 10.4" stroke-width="4"/>
+  </g>
+</defs></svg>
+
+<!-- The curtain. The four tiles arrive spinning, settle into the mark, then swing
+     apart and let the page through. It covers the moment the hero's game is loading,
+     so the wait does the work instead of a spinner. -->
+<div id="curtain" aria-hidden="true">
+  <div class="curtain-mark">
+    <span class="qt qt1"><svg viewBox="0 0 24 24"><use href="#gLeaf"/></svg></span>
+    <span class="qt qt2"><svg viewBox="0 0 24 24"><use href="#gAcorn"/></svg></span>
+    <span class="qt qt3"><svg viewBox="0 0 24 24"><use href="#gPaw"/></svg></span>
+    <span class="qt qt4"><svg viewBox="0 0 24 24"><use href="#gTail"/></svg></span>
+  </div>
+</div>
+
 <div class="wrap">
   <header class="top">
     <a class="mark" href="./">
-      <span class="mark-tiles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-      Small Games
+      <img class="mark-ico" src="assets/logo.svg" width="34" height="34" alt="" />
+      Quad Squirrel
     </a>
     <nav>
       <a href="#games">Games</a>
@@ -34,15 +72,12 @@
 
   <section class="hero">
     <div class="phone">
-      <iframe id="stagePhone" src="play/?game=nyandoku&amp;chrome=0" title="Nyandoku, playable" loading="lazy"></iframe>
+      <iframe id="stagePhone" src="play/?game=nyandoku&amp;chrome=0" title="Interactive game preview" loading="lazy"></iframe>
     </div>
     <div>
-      <h1>Six small games you can actually finish.</h1>
+      <h1>A handful of clever little games.</h1>
       <p>
-        Five of them open inside TikTok with nothing to download — a whole game in about
-        130 kilobytes, which is less than the photo you just scrolled past. One of them is
-        a 3D rescue adventure on the App Store. The phone on this page is not a picture:
-        it is the real game, running now.
+        Pick one below and take it for a spin. Five instant puzzles you can play right on this screen, plus our cozy 3D rabbit adventure on iOS. No fluff, no downloads — just jump in.
       </p>
       <div class="swap" id="swap" role="group" aria-label="Choose a game to play here"></div>
     </div>
@@ -55,22 +90,18 @@
 
 <div class="wrap">
   <section class="tile" id="about" style="margin-bottom:28px">
-    <h2 style="margin:0 0 10px;font-size:23px;font-weight:900;letter-spacing:-0.02em">How these are made</h2>
-    <p style="margin:0 0 10px;color:var(--ink-soft);max-width:72ch">
-      The five TikTok games share one runtime and one design system: a Canvas2D engine
-      written from scratch, no framework, no dependencies. Each one ships as its own
-      package of around 130 KB. Save Doge runs a real rigid-body solver on the line you
-      draw; Nyandoku's fifty boards are generated and then machine-proven to have exactly
-      one solution each.
+    <h2 style="margin:0 0 10px;font-size:23px;font-weight:900;letter-spacing:-0.02em">About Quad Squirrel</h2>
+    <p style="margin:0 0 10px;color:var(--ink-soft);max-width:68ch">
+      We make small, handcrafted games designed to fit into little pockets of your day.
+      Every puzzle opens instantly, runs smoothly, and respects your time.
     </p>
-    <p style="margin:0;color:var(--ink-soft);max-width:72ch">
-      Bunny Escape is the odd one out — twenty 3D levels, built in the browser and
-      shipped to iOS, with its own models, music and story.
+    <p style="margin:0;color:var(--ink-soft);max-width:68ch">
+      The name comes from the squirrels on the Main Quad at the University of Illinois Urbana-Champaign — chubby, fearless, and always figuring out the best route.
     </p>
   </section>
 
   <footer>
-    <span>Built by Jiawen Zhu</span>
+    <span>&copy; 2026 Quad Squirrel &middot; Built by Jiawen Zhu</span>
     <nav>
       <a href="https://github.com/JiawenZhu" rel="noopener">GitHub</a>
       <a href="https://jiawenzhu.github.io/personal-website/" rel="noopener">About me</a>
@@ -80,6 +111,28 @@
   </footer>
 </div>
 
+<script>
+  /* The curtain plays once a session, so coming back from a game is instant.
+     Add ?intro to the URL to watch it again. Anyone who has asked their system
+     for less motion never sees it at all. */
+  (function () {
+    var el = document.getElementById('curtain');
+    if (!el) return;
+    var forced = /[?&]intro\b/.test(location.search);
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var seen = false;
+    try { seen = sessionStorage.getItem('qs.curtain') === '1'; } catch (e) {}
+
+    if (still || (seen && !forced)) { el.remove(); return; }
+    try { sessionStorage.setItem('qs.curtain', '1'); } catch (e) {}
+
+    document.documentElement.classList.add('curtain-up');
+    setTimeout(function () {
+      el.remove();
+      document.documentElement.classList.remove('curtain-up');
+    }, 2300);
+  })();
+</script>
 <script src="site.js"></script>
 </body>
 </html>

@@ -14,8 +14,8 @@ const GAMES = [
     colour: '#45c0ae',
     art: 'assets/key_nyandoku.webp',
     blurb:
-      'One cat per row, per column and per colour, and no two cats may touch — not even ' +
-      'at the corners. Fifty boards from a gentle 4×4 up to a 9×9 that takes real thought.',
+      'Place one cat per row, column, and color without letting any two touch — even ' +
+      'diagonally. Easy to learn, delightfully tricky to solve.',
     specs: { Levels: '50', Kind: 'Logic', Where: 'TikTok' },
     playable: true,
   },
@@ -26,8 +26,8 @@ const GAMES = [
     colour: '#f2922f',
     art: 'assets/key_savedoge.webp',
     blurb:
-      'Draw one line to shield a dog from a swarm of bees for six seconds. The line is ' +
-      'not a wall — it is a rigid body with mass and spin, so every sting moves it.',
+      'Draw a quick barrier to protect Doge from a swarm of angry bees for six seconds. ' +
+      'Watch out — physics is real, and the bees push back!',
     specs: { Levels: '5', Kind: 'Physics', Where: 'TikTok' },
     playable: true,
   },
@@ -38,8 +38,8 @@ const GAMES = [
     colour: '#5fbf57',
     art: 'assets/key_appleworm.webp',
     blurb:
-      'A snake with gravity. Eat to grow longer, then use your own body as the bridge ' +
-      'across the gap you could not cross a moment ago.',
+      'Classic snake meets gravity. Munch apples, grow longer, and bend yourself into ' +
+      'bridges to crawl your way to the portal.',
     specs: { Levels: '5', Kind: 'Puzzle', Where: 'TikTok' },
     playable: true,
   },
@@ -50,8 +50,8 @@ const GAMES = [
     colour: '#6a8bf0',
     art: 'assets/key_parabox.webp',
     blurb:
-      'Sokoban that folds into itself. Push the box across the room, or step inside the ' +
-      'box and push the room instead.',
+      'A puzzle box that holds a whole room inside. Push the box across the floor, ' +
+      'or step inside and push from within.',
     specs: { Levels: '5', Kind: 'Mind-bend', Where: 'TikTok' },
     playable: true,
   },
@@ -62,8 +62,8 @@ const GAMES = [
     colour: '#a878e6',
     art: 'assets/key_isleofglass.webp',
     blurb:
-      'Cut a pane of stained glass into pieces, each holding one number, each exactly ' +
-      'that many squares in size. No timer, no fail state.',
+      'Carve glowing stained glass into neat rectangular panels matching each number. ' +
+      'Pure, peaceful puzzle-solving with zero rush.',
     specs: { Levels: '5', Kind: 'Zen', Where: 'TikTok' },
     playable: true,
   },
@@ -77,10 +77,8 @@ const FEATURE = {
   colour: '#b06ab3',
   art: 'assets/bunny-hero.webp',
   blurb:
-    'Monsters keep taking Doudou. You are Bubu: sneak into the house without waking ' +
-    'anything, break the trap, and run for the rainbow together. Twenty houses across ' +
-    'forests, the sea floor, mountains, desert and sky — on foot, swimming, and finally ' +
-    'on a dragon.',
+    'Sneak in as Bubu, rescue Doudou, and dash for the rainbow. Twenty charming 3D ' +
+    'rescue stages across forests, oceans, and skies — complete with a dragon ride.',
   specs: { Levels: '20', Kind: '3D adventure', Where: 'App Store' },
   href: 'https://apps.apple.com/app/id6817218343',
   site: 'https://bunny-escape-2026.web.app/',
@@ -149,7 +147,7 @@ function gameTile(g, wide) {
   body.append(h, el('p', {}, g.blurb), specList(g.specs));
 
   const row = el('div', { class: 'row' });
-  row.append(el('a', { class: 'btn', href: `play/?game=${g.id}` }, 'Play it here'));
+  row.append(el('a', { class: 'btn', href: `play/?game=${g.id}` }, 'Play now'));
   row.append(el('span', { class: 'flag' }, 'Coming to TikTok'));
   body.append(row);
 
@@ -169,7 +167,7 @@ function featureTile(g) {
   body.append(h, el('p', {}, g.blurb), specList(g.specs));
 
   const row = el('div', { class: 'row' });
-  row.append(el('a', { class: 'btn', href: g.href, rel: 'noopener' }, 'Get it on the App Store'));
+  row.append(el('a', { class: 'btn', href: g.href, rel: 'noopener' }, 'View on App Store'));
   row.append(el('a', { class: 'btn ghost', href: g.site, rel: 'noopener' }, 'Game site'));
   body.append(row);
 
@@ -183,6 +181,6 @@ wall.append(
   el(
     'p',
     { class: 'note' },
-    'The five TikTok games are built and playable; their TikTok listings are in review.'
+    'All five web games are playable right here. TikTok release coming soon.'
   )
 );

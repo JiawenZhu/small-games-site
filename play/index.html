@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>Play — Small Games</title>
+<meta name="theme-color" content="#f7efe9" />
+<meta name="description" content="Play the games in your browser." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;1000&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%; width: 100%; overflow: hidden;
+    background: #f7efe9; color: #4a2f2a;
+    font-family: Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-user-select: none; user-select: none; overscroll-behavior: none;
+  }
+  :root { --sat: env(safe-area-inset-top, 0px); --sab: env(safe-area-inset-bottom, 0px); }
+  /* These are portrait phone games. On a desktop window, hold them to a phone-shaped
+     column in the middle rather than stretching one across a monitor. */
+  #stage { position: fixed; inset: 0; margin: 0 auto; max-width: min(460px, 48vh); }
+  #GameCanvas { display: block; touch-action: none; width: 100%; height: 100%; }
+
+  /* A way back to the catalogue, for the full-page view only. The hero iframe passes
+     chrome=0 and gets nothing but the game. */
+  #home {
+    position: fixed; left: 14px; top: calc(14px + var(--sat)); z-index: 10;
+    display: none; align-items: center; gap: 8px;
+    font: 800 14px/1 Nunito, sans-serif; text-decoration: none; color: #4a2f2a;
+    background: rgba(255, 255, 255, 0.92); border: 1.5px solid #eadcd2;
+    padding: 9px 15px; border-radius: 999px;
+    box-shadow: 0 8px 18px -12px rgba(138, 90, 73, 0.6);
+  }
+  body.chrome #home { display: flex; }
+
+  #boot { position: fixed; inset: 0; display: grid; place-items: center; background: #f7efe9; transition: opacity .35s ease; z-index: 9; }
+  #boot.gone { opacity: 0; pointer-events: none; }
+  #boot i { width: 30px; height: 30px; border-radius: 50%; border: 4px solid #eadcd2; border-top-color: #45c0ae; animation: spin .9s linear infinite; display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { #boot i { animation: none; } }
+</style>
+</head>
+<body>
+  <div id="stage"><canvas id="GameCanvas"></canvas></div>
+  <a id="home" href="../">Small Games</a>
+  <div id="boot"><i></i></div>
+
+  <script src="bundle.js"></script>
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search);
+      var game = q.get('game') || 'hub';
+      var bare = q.get('chrome') === '0';
+      if (!bare) document.body.classList.add('chrome');
+
+      // In the shop-window iframe on the home page, show the board rather than the
+      // how-to-play card — the page has already explained the game. Someone who opens
+      // the game properly still gets the rules.
+      if (bare) {
+        try {
+          var KEY = 'ttarcade.v1';
+          var save = JSON.parse(localStorage.getItem(KEY) || 'null') || {};
+          save.games = save.games || {};
+          save.seenIntro = save.seenIntro || {};
+          ['nyandoku', 'savedoge', 'appleworm', 'parabox', 'isleofglass'].forEach(function (id) {
+            save.seenIntro[id] = true;
+          });
+          if (save.muted === undefined) save.muted = false;
+          if (save.plays === undefined) save.plays = 0;
+          localStorage.setItem(KEY, JSON.stringify(save));
+        } catch (e) { /* private window: the card just shows, which is fine */ }
+      }
+
+      // The bundle publishes its API once the scene is up; it is a frame or two.
+      var tries = 0;
+      (function ready() {
+        var api = window.tiktokArcade;
+        if (api) {
+          api.skipBoot();
+          if (game !== 'hub') api.launchGame(game);
+          var b = document.getElementById('boot');
+          if (b) { b.classList.add('gone'); setTimeout(function () { b.remove(); }, 400); }
+          return;
+        }
+        if (tries++ < 300) requestAnimationFrame(ready);
+      })();
+
+      // Canvas games and pull-to-refresh do not mix.
+      document.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
+    })();
+  </script>
+</body>
+</html>

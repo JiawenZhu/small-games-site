@@ -1,0 +1,549 @@
+/* =====================================================================================
+   Small Games — the studio catalogue.
+   =====================================================================================
+   The page is built from the same parts the games are: warm paper, white tiles with a
+   hairline edge, one soft shadow, and a rounded-square tile as the unit of everything.
+   Every colour on this page that is not paper or ink belongs to a specific game — the
+   chrome emits no light of its own, so the artwork and the live canvases are the only
+   bright things on screen. Tokens are lifted straight from assets/scripts/core/
+   LightShell.ts so the site and the games read as one product.
+   ===================================================================================== */
+
+:root {
+  --paper: #f7efe9;
+  --paper-top: #fdf8f4;
+  --paper-deep: #f0e3da;
+  --card: #ffffff;
+  --edge: #eadcd2;
+  --ink: #4a2f2a;
+  --ink-soft: #a08178;
+  --shadow: 138, 90, 73;
+
+  /* One per game, taken from that game's own skin. */
+  --nyandoku: #45c0ae;
+  --savedoge: #f2922f;
+  --appleworm: #5fbf57;
+  --parabox: #6a8bf0;
+  --isleofglass: #a878e6;
+  --bunnyescape: #b06ab3;
+
+  --r-tile: 26px;
+  --r-pill: 999px;
+  --gap: 18px;
+  --page: 1180px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  background-image: linear-gradient(180deg, var(--paper-top), var(--paper) 420px, var(--paper-deep));
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+}
+.skip:focus {
+  left: 16px;
+  top: 16px;
+  z-index: 50;
+  background: var(--card);
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+}
+
+/* --- masthead ----------------------------------------------------------------------- */
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 26px 0 10px;
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+/* The wordmark's own glyph: four tiles, the way every board in these games starts. */
+.mark-tiles {
+  display: grid;
+  grid-template-columns: 11px 11px;
+  grid-template-rows: 11px 11px;
+  gap: 3px;
+  flex: none;
+}
+.mark-tiles i {
+  border-radius: 4px;
+  background: var(--nyandoku);
+}
+.mark-tiles i:nth-child(2) {
+  background: var(--savedoge);
+}
+.mark-tiles i:nth-child(3) {
+  background: var(--parabox);
+}
+.mark-tiles i:nth-child(4) {
+  background: var(--isleofglass);
+}
+
+.top nav {
+  display: flex;
+  gap: 8px;
+  font-size: 15px;
+}
+.top nav a {
+  text-decoration: none;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  color: var(--ink-soft);
+}
+.top nav a:hover {
+  background: var(--card);
+  color: var(--ink);
+}
+
+/* --- hero ---------------------------------------------------------------------------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 40px;
+  align-items: center;
+  padding: 26px 0 54px;
+}
+
+.hero h1 {
+  margin: 0 0 14px;
+  font-size: clamp(36px, 5.4vw, 60px);
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  max-width: 15ch;
+}
+
+.hero p {
+  margin: 0 0 24px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  max-width: 46ch;
+}
+
+/* The phone is a real one: a live game runs inside it. */
+.phone {
+  position: relative;
+  aspect-ratio: 9 / 19.5;
+  border-radius: 40px;
+  background: #15100e;
+  padding: 7px;
+  box-shadow: 0 30px 60px -22px rgba(var(--shadow), 0.5), 0 2px 0 rgba(255, 255, 255, 0.5) inset;
+}
+.phone iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 34px;
+  display: block;
+  background: var(--paper);
+}
+.phone::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 86px;
+  height: 22px;
+  border-radius: var(--r-pill);
+  background: #15100e;
+}
+
+.swap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.swap button {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  border: 1.5px solid var(--edge);
+  background: var(--card);
+  color: var(--ink);
+  padding: 8px 15px;
+  border-radius: var(--r-pill);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: border-color 0.16s, transform 0.16s;
+}
+.swap button:hover {
+  transform: translateY(-1px);
+}
+.swap button[aria-pressed="true"] {
+  border-color: var(--dot);
+  background: color-mix(in srgb, var(--dot) 12%, var(--card));
+}
+.swap button b {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: var(--dot);
+  flex: none;
+}
+
+/* --- the wall ------------------------------------------------------------------------- */
+
+.wall {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--gap);
+  padding-bottom: 64px;
+}
+
+.tile {
+  background: var(--card);
+  border: 1.5px solid var(--edge);
+  border-radius: var(--r-tile);
+  padding: 22px;
+  box-shadow: 0 12px 26px -20px rgba(var(--shadow), 0.55);
+}
+
+/* A game takes half the wall, and floods its half with its own colour. */
+.game {
+  grid-column: span 3;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.game .art {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: color-mix(in srgb, var(--dot) 16%, var(--card));
+  overflow: hidden;
+}
+.game .art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.game .body {
+  padding: 0 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.game h3 {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.game h3 span {
+  font-family: "Noto Sans SC", Nunito, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+
+.game p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-weight: 700;
+  font-size: 15.5px;
+  flex: 1;
+}
+
+/* Specs read as a small table because they are facts, not decoration. */
+.specs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2px 14px;
+  border-top: 1.5px solid var(--edge);
+  padding-top: 13px;
+  font-size: 14px;
+}
+.specs dt {
+  color: var(--ink-soft);
+  font-weight: 700;
+  font-size: 12.5px;
+}
+.specs dd {
+  margin: 0 0 6px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  border: 0;
+  border-radius: var(--r-pill);
+  padding: 11px 22px;
+  background: var(--dot, var(--ink));
+  color: #fff;
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--dot, var(--ink)) 72%, #000);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.btn:hover {
+  transform: translateY(1px);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--dot, var(--ink)) 72%, #000);
+}
+.btn:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--edge);
+  box-shadow: none;
+}
+.btn.ghost:hover {
+  border-color: var(--ink-soft);
+  transform: none;
+}
+
+.flag {
+  font-size: 12.5px;
+  font-weight: 900;
+  color: var(--ink-soft);
+  border: 1.5px solid var(--edge);
+  border-radius: var(--r-pill);
+  padding: 5px 12px;
+}
+
+/* The wide tile: Bunny Escape is the one you download, so it gets the whole row. */
+.feature {
+  grid-column: span 6;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.feature .art {
+  aspect-ratio: auto;
+  min-height: 330px;
+  /* Square key art in a very tall box leaves the text stranded in white space. */
+  max-height: 400px;
+}
+.feature .body {
+  padding: 32px;
+  justify-content: center;
+  gap: 14px;
+}
+.feature h3 {
+  font-size: 34px;
+}
+.feature p {
+  flex: none;
+  font-size: 16.5px;
+  max-width: 42ch;
+}
+
+.feature.flip {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+}
+.feature.flip .art {
+  order: 2;
+}
+.feature.flip .body {
+  order: 1;
+}
+
+.note {
+  grid-column: span 6;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 0 0;
+}
+
+/* --- footer ---------------------------------------------------------------------------- */
+
+footer {
+  border-top: 1.5px solid var(--edge);
+  padding: 30px 0 60px;
+  color: var(--ink-soft);
+  font-size: 14.5px;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+footer a {
+  text-decoration: none;
+}
+footer a:hover {
+  color: var(--ink);
+}
+footer nav {
+  display: flex;
+  gap: 18px;
+}
+
+/* --- narrow ------------------------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding-bottom: 36px;
+  }
+  /* On a narrow screen the sentence comes before the shop window, or the headline
+     starts below the fold and the page opens on a phone inside a phone. */
+  .hero > div:not(.phone) {
+    order: 1;
+  }
+  .phone {
+    order: 2;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+  .game,
+  .feature,
+  .note {
+    grid-column: span 6;
+  }
+  .feature {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .feature .art {
+    min-height: 220px;
+    aspect-ratio: 16 / 9;
+  }
+  .feature .body {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    font-size: 16px;
+  }
+  .top nav {
+    display: none;
+  }
+  .specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --- legal pages ------------------------------------------------------------------------ */
+
+.prose {
+  max-width: 68ch;
+  margin: 0 auto;
+  padding: 10px 0 72px;
+}
+.prose h1 {
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  margin: 18px 0 6px;
+}
+.prose .when {
+  color: var(--ink-soft);
+  font-size: 15px;
+  margin: 0 0 30px;
+}
+.prose h2 {
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -0.015em;
+  margin: 34px 0 10px;
+}
+.prose p,
+.prose li {
+  color: var(--ink-soft);
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+.prose ul {
+  padding-left: 22px;
+}
+.prose strong {
+  color: var(--ink);
+}
+.prose a {
+  color: var(--ink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
